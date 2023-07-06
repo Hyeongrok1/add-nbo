@@ -12,7 +12,7 @@ int read_num(char *file_name) {
 	if ((n = fread(&buf, sizeof(uint32_t), 1, fp)) != 0) {
 		// read uint32_t num
 		// HBO to NBO
-		return htonl(buf);
+		return ntohl(buf);
 	}
 	return 0;
 }
