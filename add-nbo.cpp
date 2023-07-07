@@ -6,13 +6,21 @@
 
 int read_num(char *file_name) {
 	// open binary file
-	FILE *fp = fopen(file_name, "rb");	
-	size_t n = 0;
-	uint32_t buf = 0;
-	if ((n = fread(&buf, sizeof(uint32_t), 1, fp)) != 0) {
+	FILE *fp = NULL;
+	if ((fp = fopen(file_name, "rb")) == NULL) {
+		printf("failed to open %s\n", file_name);
+		exit(1);
+	};	
+
+	size_t n;
+	uint32_t buf;
+	if ((n = fread(&buf, 1, sizeof(uint32_t), fp)) == sizeof(uint32_t)) {
 		// read uint32_t num
-		// HBO to NBO
+		// NBO to HBO
 		return ntohl(buf);
+	} else {
+		printf("failed to read 4 bytes from %s\n", file_name);
+		exit(1);
 	}
 	return 0;
 }
@@ -27,6 +35,6 @@ int main(int argc, char *argv[]) {
 	uint32_t second_num = read_num(argv[2]);
 	uint32_t sum = first_num + second_num;
 
-	printf("%u(%#x) + %u(%#x) = %u(%#x)", first_num, first_num, second_num, second_num, sum, sum);
+	printf("%u(%#x) + %u(%#x) = %u(%#x)\n", first_num, first_num, second_num, second_num, sum, sum);
 	return 0;
 }
